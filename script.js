@@ -21,11 +21,34 @@ window.addEventListener("DOMContentLoaded", (event) => {
     },
   );
 
-  // CMS Items Animation
-  const cmsItems = document.querySelectorAll(".project-items");
+  // CMS Items Animation (Project Items)
+  const projectItems = document.querySelectorAll(".project-items");
 
-  // Loop through each CMS item and create an animation
-  cmsItems.forEach((item) => {
+  // Loop through each CMS item (Project Item) and create an animation
+  projectItems.forEach((item) => {
+    // Initial state (hidden and translated down)
+    gsap.set(item, { opacity: 0, y: 100 });
+
+    // Create the scroll-triggered animation
+    gsap.to(item, {
+      scrollTrigger: {
+        trigger: item, // Trigger the animation when the item is in view
+        start: "top 80%", // Animation starts when the top of the item is at 80% of the viewport height
+        end: "bottom 60%", // Animation ends when the bottom of the item is at 60% of the viewport height
+        toggleActions: "play none none reverse", // On enter, play the animation. On leave, reverse the animation
+      },
+      opacity: 1, // Fade in
+      y: 0, // Move to original position
+      duration: 1, // Animation duration in seconds
+      ease: "power4.out", // Easing function
+    });
+  });
+
+  // CMS Items Animation (Article Items)
+  const articleItems = document.querySelectorAll(".article-items");
+
+  // Loop through each CMS item (Article Item) and create an animation
+  articleItems.forEach((item) => {
     // Initial state (hidden and translated down)
     gsap.set(item, { opacity: 0, y: 100 });
 
@@ -98,7 +121,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     let tl = gsap.timeline({ paused: true });
     tl.from($(this).find(".char"), {
       yPercent: 100,
-      duration: 0.2,
+      duration: 0.3,
       ease: "power1.out",
       stagger: { amount: 0.6 },
     });
@@ -109,7 +132,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     let tl = gsap.timeline({ paused: true });
     tl.from($(this).find(".char"), {
       opacity: 0,
-      duration: 0.2,
+      duration: 0.3,
       ease: "power1.out",
       stagger: { amount: 0.8 },
     });
@@ -128,7 +151,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     });
     tl.from($(this).find(".word"), {
       opacity: 0.2,
-      duration: 0.2,
+      duration: 0.3,
       ease: "power1.out",
       stagger: { each: 0.8 },
     });
@@ -144,6 +167,29 @@ window.addEventListener("DOMContentLoaded", (event) => {
     });
 
     createScrollTrigger($(this), tl);
+  });
+
+  // Service Divs Animation
+  const serviceDivs = document.querySelectorAll(".service");
+
+  // Loop through each service div and create an animation
+  serviceDivs.forEach((service) => {
+    // Initial state (hidden and translated down)
+    gsap.set(service, { opacity: 0, y: 100 });
+
+    // Create the scroll-triggered animation
+    gsap.to(service, {
+      scrollTrigger: {
+        trigger: service, // Trigger the animation when the service div is in view
+        start: "top 80%", // Animation starts when the top of the service div is at 80% of the viewport height
+        end: "bottom 60%", // Animation ends when the bottom of the service div is at 60% of the viewport height
+        toggleActions: "play none none reverse",
+      },
+      opacity: 1, // Fade in
+      y: 0, // Move to original position
+      duration: 1, // Animation duration in seconds
+      ease: "power4.out", // Easing function
+    });
   });
 
   gsap.set("[text-split]", { opacity: 1 });

@@ -1,12 +1,83 @@
 window.addEventListener("DOMContentLoaded", (event) => {
+  // Register ScrollTrigger plugin
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Video Animation
+  const video = document.querySelector(".video");
+  gsap.fromTo(
+    video,
+    { scale: 1.2 },
+    {
+      scale: 0.8, // Adjust scale to the desired size
+      scrollTrigger: {
+        trigger: ".hero-section",
+        start: "top bottom",
+        end: "bottom bottom",
+        scrub: true,
+        markers: true, // Remove this line in production
+      },
+      transformOrigin: "center center",
+      ease: "power1.out",
+    },
+  );
+
+  // CMS Items Animation
+  const cmsItems = document.querySelectorAll(".project-items");
+
+  // Loop through each CMS item and create an animation
+  cmsItems.forEach((item) => {
+    // Initial state (hidden and translated down)
+    gsap.set(item, { opacity: 0, y: 100 });
+
+    // Create the scroll-triggered animation
+    gsap.to(item, {
+      scrollTrigger: {
+        trigger: item, // Trigger the animation when the item is in view
+        start: "top 80%", // Animation starts when the top of the item is at 80% of the viewport height
+        end: "bottom 60%", // Animation ends when the bottom of the item is at 60% of the viewport height
+        toggleActions: "play none none reverse", // On enter, play the animation. On leave, reverse the animation
+      },
+      opacity: 1, // Fade in
+      y: 0, // Move to original position
+      duration: 1, // Animation duration in seconds
+      ease: "power4.out", // Easing function
+    });
+  });
+
+  // Process section animation
+  $(".home-scroll_section").each(function (index) {
+    let childTriggers = $(this).find(".home-scroll_text-item");
+    let childTargets = $(this).find(".home-scroll_img-item");
+    // Switch active class
+    function makeItemActive(index) {
+      childTriggers.removeClass("is-active");
+      childTargets.removeClass("is-active");
+      childTriggers.eq(index).addClass("is-active");
+      childTargets.eq(index).addClass("is-active");
+    }
+    makeItemActive(0);
+    // Create triggers
+    childTriggers.each(function (index) {
+      ScrollTrigger.create({
+        trigger: $(this),
+        start: "top center",
+        end: "bottom center",
+        onToggle: (isActive) => {
+          if (isActive) {
+            makeItemActive(index);
+          }
+        },
+      });
+    });
+  });
+
+  // Text Animation
   let typeSplit = new SplitType("[text-split]", {
     types: "words, chars",
     tagName: "span",
   });
 
-  // Link timelines to scroll position
   function createScrollTrigger(triggerElement, timeline) {
-    // Reset tl when scroll out of view past bottom of screen
     ScrollTrigger.create({
       trigger: triggerElement,
       start: "top bottom",
@@ -18,7 +89,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     ScrollTrigger.create({
       trigger: triggerElement,
-      start: "top 60%",
+      start: "top 100%",
       onEnter: () => timeline.play(),
     });
   }
@@ -31,6 +102,47 @@ window.addEventListener("DOMContentLoaded", (event) => {
       ease: "power1.out",
       stagger: { amount: 0.6 },
     });
+    createScrollTrigger($(this), tl);
+  });
+
+  $("[letters-fade-in]").each(function (index) {
+    let tl = gsap.timeline({ paused: true });
+    tl.from($(this).find(".char"), {
+      opacity: 0,
+      duration: 0.2,
+      ease: "power1.out",
+      stagger: { amount: 0.8 },
+    });
+    createScrollTrigger($(this), tl);
+  });
+
+  $("[scrub-each-word]").each(function (index) {
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: $(this),
+        start: "top 75%", // Trigger earlier
+        end: "bottom 50%", // Adjust end point accordingly
+        scrub: true,
+        markers: true, // Remove or comment this line in production
+      },
+    });
+    tl.from($(this).find(".word"), {
+      opacity: 0.2,
+      duration: 0.2,
+      ease: "power1.out",
+      stagger: { each: 0.8 },
+    });
+  });
+
+  $("[letters-slide-down]").each(function (index) {
+    let tl = gsap.timeline({ paused: true });
+    tl.from($(this).find(".char"), {
+      yPercent: -120,
+      duration: 0.3,
+      ease: "power1.out",
+      stagger: { amount: 0.7 },
+    });
+
     createScrollTrigger($(this), tl);
   });
 
